@@ -1,0 +1,11 @@
+{
+  "name": "exercise-tracker",
+  "version": "1.0.0",
+  "description": "An api that stores creates and stores users and excercises in a database. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oscar Fabiani",
+  "license": "ISC"
+}
