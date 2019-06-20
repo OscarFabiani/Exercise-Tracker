@@ -3,18 +3,17 @@ const mongoose = require('mongoose')
 const app = express()
 const bodyParser = require('body-parser')
 
-const cors = require('cors')
 
 
-app.use(cors())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 
-//Entered in .env glitch file
-//process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
+process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track' )
+
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track', { useNewUrlParser: true } )
+//NOTE: Including { useNewUrlParser: true } avoids a deprecation warning
 
 
 //Serving static assets from public folder
@@ -138,7 +137,6 @@ app.use((err, req, res, next) => {
 
 
 
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
-  console.log(listener.address());
+const listener = app.listen(3000, () => {
+  console.log('App listening on port ' + listener.address().port)
 })
