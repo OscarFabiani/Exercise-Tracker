@@ -8,8 +8,8 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-
-process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
+//CHANGE PASSWORD
+process.env.MONGO_URI = 'mongodb+srv://spartan539:password1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
 
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track', { useNewUrlParser: true } )
