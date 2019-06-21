@@ -1,12 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
-const bodyParser = require('body-parser')
 
 
-//CHANGE TO EXPRESS AND TEST
 app.use(express.urlencoded({extended: false}))
-app.use(express.json())
+//app.use(express.json()) //This app doesn't seem to need this
 
 
 process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
@@ -37,7 +35,8 @@ var User = mongoose.model('User', userSchema);
 app.route('/api/exercise/new-user')
 .post(function(req, res) {
   var username = req.body.username;
-  if (username.length > 20) { res.json({ error: 'username too long' }) }
+  if (!username) { res.json({ error: 'username required' }) }
+  else if (username.length > 20) { res.json({ error: 'username too long' }) }
   else {
     User.findOne({username: username}, function(err, foundUser) {
       if (foundUser) { res.json({ error: 'username taken' }) }
@@ -45,7 +44,7 @@ app.route('/api/exercise/new-user')
         new User({username: username})
         .save(function(err,  newUser) {
           if (err) {console.log(err)};
-          console.log('new user created');
+          console.log('new user created:');
           console.log(newUser);
           res.json({username: username});
         });
