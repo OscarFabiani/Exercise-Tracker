@@ -73,10 +73,14 @@ app.route('/api/exercise/new-user')
 
 app.route('/api/exercise/users')
 .get(function(req, res) {
+
+  //gets an array of all User documents in the db collection
   User.find(function(err, users) {
     if (err) console.log(err);
     console.log('users:');
     console.log(users);
+
+    //responds with json of all User documents
     res.json(users);
   })
 });
@@ -84,27 +88,45 @@ app.route('/api/exercise/users')
 
 app.route('/api/exercise/add')
 .post(function(req, res) {
+
+  //variables for form entries
   var username = req.body.username;
   var desc = req.body.description;
   var dur = req.body.duration;
   //var date = req.body.date; //not yet used
+
+  //checks if there is document in the db collection with a matching username
   User.findOne({username: username}, function(err, user) {
     if (err) console.log(err);
+
+    //checks if username was entered
     if (!username) {res.json({error: 'username required'})}
+    //checks if no matching User document was found
     else if (!user) {res.json({error: 'no such user'})}
+    //checks if description was entered
     else if (!desc) {res.json({error: 'description required'})}
+    //checks if duration was entered
     else if (!dur) {res.json({error: 'duration required'})}
+    //checks if duration is a number
     else if (isNaN(dur)) {res.json({error: 'duration must be a number'})}
     else {
+
+      //pushes new object to user.log
       user.log.push({
         description: desc,
         duration: dur
       });
+
+      //increments user.count
       user.count += 1;
+
+      //saves user after changes
       user.save(function(err, updatedUser) {
         if (err) {console.log(err)};
         console.log('updatedUser');
         console.log(updatedUser)
+
+        //responds with user and exercise JSON info
         res.json({
           username: username,
           description: desc,
