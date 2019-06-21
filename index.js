@@ -7,7 +7,7 @@ app.use(express.urlencoded({extended: false}))
 //app.use(express.json()) //This app doesn't seem to need this
 
 //CHANGE PASSWORD
-process.env.MONGO_URI = 'mongodb+srv://spartan539:password1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
+process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
 
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track', { useNewUrlParser: true } )
@@ -34,18 +34,35 @@ var User = mongoose.model('User', userSchema);
 
 app.route('/api/exercise/new-user')
 .post(function(req, res) {
+
+  //variable for entered username
   var username = req.body.username;
+
+  //checks if username was not entered
   if (!username) { res.json({ error: 'username required' }) }
+
+  //checks if username is more than 20 characters
   else if (username.length > 20) { res.json({ error: 'username too long' }) }
+
   else {
+    //checks if there is a document in the db collection with a matching username
     User.findOne({username: username}, function(err, foundUser) {
+      if (err) { console.log(err) };
+
+      //responds with an error if there is already a user document with the entered username
       if (foundUser) { res.json({ error: 'username taken' }) }
       else {
-        new User({username: username})
+
+        //creates a new User document with entered username
+        new User({ username: username })
+
+        //saves new User document
         .save(function(err,  newUser) {
           if (err) {console.log(err)};
           console.log('new user created:');
           console.log(newUser);
+
+          //json response
           res.json({username: username});
         });
       }
@@ -65,15 +82,12 @@ app.route('/api/exercise/users')
 });
 
 
-//KEEP WORKING ON THIS, MAYBE USE NESTED SCHEMA FOR VALIDATION AND SUCH
 app.route('/api/exercise/add')
 .post(function(req, res) {
-  console.log(req.body);
   var username = req.body.username;
   var desc = req.body.description;
   var dur = req.body.duration;
-  var date = req.body.date;
-  //MAYBE CHANGE TO FINDONEANDUPDATE()
+  //var date = req.body.date; //not yet used
   User.findOne({username: username}, function(err, user) {
     if (err) console.log(err);
     if (!username) {res.json({error: 'username required'})}
@@ -157,11 +171,7 @@ const listener = app.listen(3000, () => {
 
 //ADD COMMENTS FOR ROUTES
 //POSSIBLY CONVERT MANUAL FORM VERIFICATION IN /API/EXERCISE/ADD ROUTE TO NESTED SCHEMA
-<<<<<<< HEAD
 //POSSIBLY CONVERT OTHER MANUAL FORM VERIFICATIONS USING SCHEMA PROPERTY OPTIONS (MAX LENGTH, UNIQUE, ETC.)
 //POSSIBLY REFINE JSON RESPONSES (USERS TO ONLY INCLUDE USERNAMES, ETC.)
 //POSSIBLY ADD DATE FUNCTIONALITY
 //POSSIBLY REWORK HTML AND CSS
-=======
-//POSSIBLY REWORK HTML AND CSS
->>>>>>> 6367c82c2c2934ce40e37e212e2bf4609bd9ce84
