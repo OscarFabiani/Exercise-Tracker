@@ -7,7 +7,7 @@ app.use(express.urlencoded({extended: false}))
 //app.use(express.json()) //This app doesn't seem to need this
 
 //CHANGE PASSWORD
-process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
+process.env.MONGO_URI = 'mongodb+srv://spartan539:password1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
 
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track', { useNewUrlParser: true } )
@@ -199,7 +199,6 @@ const listener = app.listen(3000, () => {
 
 
 
-//ADD COMMENTS FOR ROUTES
 //POSSIBLY CONVERT MANUAL FORM VERIFICATION IN /API/EXERCISE/ADD ROUTE TO NESTED SCHEMA
 //POSSIBLY CONVERT OTHER MANUAL FORM VERIFICATIONS USING SCHEMA PROPERTY OPTIONS (MAX LENGTH, UNIQUE, ETC.)
 //POSSIBLY REFINE JSON RESPONSES (USERS TO ONLY INCLUDE USERNAMES, ETC.)
