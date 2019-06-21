@@ -4,7 +4,7 @@ const app = express()
 const bodyParser = require('body-parser')
 
 
-
+//CHANGE TO EXPRESS AND TEST
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
@@ -108,13 +108,16 @@ app.route('/api/exercise/log')
 });
 
 
+// Custom 404 response middleware for all wrong routes
+app.use(function(req, res){
 
+  //sets the status of the response to 404
+  res.status(404);
 
+  //sends a response indicating 404 
+  res.send('Whoops! The page you requested was not found (404).');
+});
 
-// Not found middleware
-app.use((req, res, next) => {
-  return next({status: 404, message: 'not found'})
-})
 
 // Error Handling middleware
 app.use((err, req, res, next) => {
@@ -140,3 +143,9 @@ app.use((err, req, res, next) => {
 const listener = app.listen(3000, () => {
   console.log('App listening on port ' + listener.address().port)
 })
+
+
+
+//ADD COMMENTS FOR ROUTES
+//POSSIBLY CONVERT MANUAL FORM VERIFICATION IN /API/EXERCISE/ADD ROUTE TO NESTED SCHEMA
+//POSSIBLY REWORK HTML AND CSS
