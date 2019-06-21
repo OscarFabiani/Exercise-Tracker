@@ -5,8 +5,8 @@ const bodyParser = require('body-parser')
 
 
 //CHANGE TO EXPRESS AND TEST
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 
 
 process.env.MONGO_URI = 'mongodb+srv://spartan539:popcorn1@cluster0-m1tag.mongodb.net/test?retryWrites=true&w=majority';
@@ -22,7 +22,7 @@ app.use(express.static('public'));
 //Serving HTML file to root
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
-});
+}); 
 
 
 var userSchema = {
@@ -36,13 +36,22 @@ var User = mongoose.model('User', userSchema);
 
 app.route('/api/exercise/new-user')
 .post(function(req, res) {
-  console.log(req.body.username);
   var username = req.body.username;
-  new User({username: username})
-  .save(function(err,  newUser) {
-    if (err) {console.log(err)};
-    res.json({username: username});
-  });
+  if (username.length > 20) { res.json({ error: 'username too long' }) }
+  else {
+    User.findOne({username: username}, function(err, foundUser) {
+      if (foundUser) { res.json({ error: 'username taken' }) }
+      else {
+        new User({username: username})
+        .save(function(err,  newUser) {
+          if (err) {console.log(err)};
+          console.log('new user created');
+          console.log(newUser);
+          res.json({username: username});
+        });
+      }
+    })
+  }
 });
 
 
@@ -119,6 +128,7 @@ app.use(function(req, res){
 });
 
 
+//EXPLORE THIS: HOW DOES IT WORK
 // Error Handling middleware
 app.use((err, req, res, next) => {
   let errCode, errMessage
@@ -148,4 +158,7 @@ const listener = app.listen(3000, () => {
 
 //ADD COMMENTS FOR ROUTES
 //POSSIBLY CONVERT MANUAL FORM VERIFICATION IN /API/EXERCISE/ADD ROUTE TO NESTED SCHEMA
+//POSSIBLY CONVERT OTHER MANUAL FORM VERIFICATIONS USING SCHEMA PROPERTY OPTIONS (MAX LENGTH, UNIQUE, ETC.)
+//POSSIBLY REFINE JSON RESPONSES (USERS TO ONLY INCLUDE USERNAMES, ETC.)
+//POSSIBLY ADD DATE FUNCTIONALITY
 //POSSIBLY REWORK HTML AND CSS
