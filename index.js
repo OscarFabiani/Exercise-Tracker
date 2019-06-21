@@ -140,12 +140,20 @@ app.route('/api/exercise/add')
 
 app.route('/api/exercise/log')
 .get(function(req, res) {
+
+  //variable for username
   var username = req.query.username;
   console.log(username);
+
+  //checks if there is document in the db collection with a matching username
   User.findOne({username: username}, function(err, user) {
     if (err) console.log(err);
+
+    //checks if no matching User document was found
     if (!user) {res.json({error: 'no such user'})}
     else {
+
+      //responds with User document JSON info
       res.json(user);
     }
   })
